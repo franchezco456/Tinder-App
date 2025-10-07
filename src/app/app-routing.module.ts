@@ -1,5 +1,9 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard, redirectLoggedInTo ,redirectUnauthorizedTo } from '@angular/fire/auth-guard';
+
+const isloggedIn = () => redirectLoggedInTo(['/home']);
+const isNotLoggedIn = () => redirectUnauthorizedTo(['/login']);
 
 const routes: Routes = [
   {
@@ -12,7 +16,9 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
+    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule),
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: isNotLoggedIn }
   },
   {
     path: '**',

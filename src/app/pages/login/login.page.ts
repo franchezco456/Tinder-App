@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Form, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Auth } from 'src/app/core/providers/auth/auth';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +15,7 @@ export class LoginPage implements OnInit {
   public password !: FormControl;
   public loginForm !: FormGroup;
 
-  constructor() { 
+  constructor(private readonly authPrv: Auth, private readonly router : Router) { 
     this.initForm();
   }
 
@@ -31,11 +33,16 @@ export class LoginPage implements OnInit {
   }
   
   public goToRegister(){
-    console.log("go to register");
+    this.router.navigate(['/register']);
   }
 
-  public onSubmit(){
-    console.log(this.loginForm.value);
+  public async onSubmit(){
+     try {
+      await this.authPrv.loginWithEmailAndPassword(this.loginForm);
+      this.router.navigate(['/home']);
+    } catch (error) {
+      console.log((error as any).message);
+    }
   }
 
 }
