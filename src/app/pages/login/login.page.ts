@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Form, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/providers/auth/auth';
+import { Credentials } from 'src/domain/model/credentials.model';
 
 @Component({
   selector: 'app-login',
@@ -38,7 +39,8 @@ export class LoginPage implements OnInit {
 
   public async onSubmit(){
      try {
-      await this.authPrv.loginWithEmailAndPassword(this.loginForm);
+      const credential: Credentials = { email: this.email.value, password: this.password.value };
+      await this.authPrv.loginWithEmailAndPassword(credential);
       this.router.navigate(['/home']);
     } catch (error) {
       console.log((error as any).message);

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Auth as AuthFire, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '@angular/fire/auth';
 import { FormGroup } from '@angular/forms';
+import { Credentials } from 'src/domain/model/credentials.model';
+import { User } from 'src/domain/model/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -9,47 +11,49 @@ export class Auth {
 
   constructor(private readonly afb: AuthFire) { }
 
-  async register(register: FormGroup) {
+  async register(credentials : Credentials, user : User): Promise <string> {
     try {
-      if (!register.value.email) {
-        throw new Error('Email is required');
-      }
-      if (!register.value.password) {
-        throw new Error('Password is required');
-      }
       const response = await createUserWithEmailAndPassword(
         this.afb,
-        register.value.email,
-        register.value.password
+        credentials.email,
+        credentials.password
       )
-      return response
+      
+      return response.user.uid;
     } catch (error) {
-      console.error('Error registering user:', error);
-      return;
+      console.error((error as any).message);
+      throw error;
     }
   }
 
-  async loginWithEmailAndPassword(login: FormGroup) {
+  async loginWithEmailAndPassword(credential: Credentials): Promise <string> {
     try {
-      if (!login.value.email) {
+      if (!credential.email) {
         throw new Error('Email is required');
       }
-      if (!login.value.password) {
+      if (!credential.password) {
         throw new Error('Password is required');
       }
 
       const response = await signInWithEmailAndPassword(
         this.afb,
-        login.value.email,
-        login.value.password
+        credential.email,
+        credential.password
       );
-      return response
+      return response.user.uid;
     } catch (error) {
-      console.error('Error logging in user:', error);
-      return;
+      console.error((error as any).message);
+      throw error;
     }
   }
 
+  async logout() {
+    try{
+      await this.afb.signOut();
+    }catch(error){
+      console.error('Error logging out user:', error);
+    }
+  }
 }
 
 

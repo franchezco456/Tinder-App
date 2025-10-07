@@ -5,8 +5,6 @@ import { InputComponent } from './components/input/input.component';
 import { CardComponent } from './components/card/card.component';
 import { ButtonComponent } from './components/button/button.component';
 
-
-
 @NgModule({
   declarations: [InputComponent, CardComponent, ButtonComponent],
   imports: [

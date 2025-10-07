@@ -4,7 +4,7 @@
   fill="solid"
   [placeholder]="placeholder"
   [type]="type"
-  [value]="control.value"
+  [value]="control?.value"
   (keyup)="doWrite($event)">
 
 @if(type === 'password'){

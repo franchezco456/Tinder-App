@@ -1,13 +1,105 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>register</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">register</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <form [formGroup]="registerForm">
+          <app-card>
+            <ion-grid>
+              @if(page==0){
+              <ion-row>
+                <ion-col>
+                  <app-input label="First Name" placeholder="Enter your first name" type="text"
+                    [control]="registerForm.get('firstName')"></app-input>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <app-input label="Last Name" placeholder="Enter your last name" type="text"
+                    [control]="registerForm.get('lastName')"></app-input>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <app-input label="Email" placeholder="Enter your email" type="email"
+                    [control]="registerForm.get('email')"></app-input>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <app-input label="Password" placeholder="Enter your password" type="password"
+                    [control]="registerForm.get('password')"></app-input>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <app-input label="Country" placeholder="Enter your country" type="text"
+                    [control]="registerForm.get('country')"></app-input>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <app-button label="continue" fill="solid" [disabled]="false" type="button"
+                    (click)="changePage(true)"></app-button>
+                </ion-col>
+              </ion-row>
+              }
+              @else if(page==1){
+              <ion-row>
+                <ion-col>
+                  <app-button label = "Male" fill = "solid" type = "button" (click)="selectGender('male')"></app-button>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <app-button label = "Female" fill = "solid" type = "button" (click)="selectGender('female')"></app-button>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-checkbox formControlName="showGenderProfile">Show my Gender Profile</ion-checkbox>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <app-button label="Continue" fill="solid" type="button"
+                    (click)="changePage(true)"></app-button>
+                </ion-col>
+              </ion-row>
+              }
+              @else if(page==2){
+                <ion-row>
+                  <ion-col>
+                    <app-input label="Birthdate" placeholder="Enter your birthdate" type="date"
+                      [control]="registerForm.get('birthdate')"></app-input>
+                  </ion-col>
+                </ion-row>
+                @if(getFieldError('birthdate')) {
+                  <ion-row>
+                    <ion-col>
+                      <ion-text color="danger">
+                        <small>{{ getFieldError('birthdate') }}</small>
+                      </ion-text>
+                    </ion-col>
+                  </ion-row>
+                }
+                <ion-row>
+                  <ion-col>
+                    <app-button label="Return" fill="solid" type="button"
+                      (click)="changePage(false)"></app-button>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <app-button label="Continue" fill="solid" type="button"
+                      [disabled]="!isPageValid()" 
+                      (click)="changePage(true)"></app-button>
+                  </ion-col>
+                </ion-row>
+              }
+            </ion-grid>
+          </app-card>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
