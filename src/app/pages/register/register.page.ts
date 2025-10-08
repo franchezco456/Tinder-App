@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { File } from 'src/app/core/providers/file/file';
 
 @Component({
   selector: 'app-register',
@@ -12,10 +13,25 @@ export class RegisterPage implements OnInit {
   public gender : string = '';
   public registerForm !: FormGroup;
   public ageError: string = '';
-  
+
+  public passionsOps = [
+    { label: 'Sports', value: 'sports' },
+    { label: 'Music', value: 'music' },
+    { label: 'Travel', value: 'travel' },
+    { label: 'Reading', value: 'reading' },
+    { label: 'Movies', value: 'movies' },
+    { label: 'Cooking', value: 'cooking' },
+    { label: 'Movies', value: 'movies' },
+    { label: 'Yoga', value: 'yoga' },
+    { label: 'Video Games', value: 'video_games' },
+    { label: 'Books', value: 'books' },
+    { label: 'Lofi', value: 'lofi' },
+    { label: 'Gym', value: 'gym' }
+  ];
+
   // Opciones para el radio de género
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private readonly fileSrv: File) {
     this.initForm();
   }
   
@@ -117,5 +133,29 @@ export class RegisterPage implements OnInit {
       passion: [[], [Validators.required]],
       photos: [[], [Validators.required]]
     });
+  }
+  public selectInterest(value: string) {
+    const passionsControl = this.registerForm.get('passion');
+    if (passionsControl) {
+      const currentValues = passionsControl.value || [];
+      if (currentValues.includes(value)) {
+        passionsControl.setValue(currentValues.filter((v: string) => v !== value));
+      } else {
+        passionsControl.setValue([...currentValues, value]);
+      }
+      passionsControl.markAsTouched();
+  }
+}
+
+  public isPassionSelected(value: string): boolean {
+    const passionsControl = this.registerForm.get('passion');
+    if (!passionsControl) return false;
+    const currentValues = passionsControl.value || [];
+    return currentValues.indexOf(value) !== -1;
+  }
+
+  public async selectImages() {
+    const images = await this.fileSrv.pickImage();
+    console.log(images.data);
   }
 }

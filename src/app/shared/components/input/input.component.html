@@ -5,9 +5,9 @@
   [placeholder]="placeholder"
   [type]="type"
   [value]="control?.value"
-  (keyup)="doWrite($event)">
+  (ionChange)="onChange($event)">
 
-@if(type === 'password'){
-  <ion-input-password-toggle slot="end"></ion-input-password-toggle>
-}
+  @if(type === 'password'){
+    <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+  }
 </ion-input>

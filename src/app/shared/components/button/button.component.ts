@@ -12,6 +12,7 @@ export class ButtonComponent  implements OnInit {
   @Input () label : string = 'Button';
   @Input () disabled : boolean = false;
   @Input () fill : ButtonFill = 'solid';
+  @Input () color : string | undefined;
   @Input () type : ButtonType = 'button';
   constructor() { }
 

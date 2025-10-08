@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormControl } from '@angular/forms';
 
 type InputType = 'text' |'password'| 'email' | 'number' | 'date';
@@ -13,15 +13,16 @@ export class InputComponent  implements OnInit {
   @Input() placeholder : string = '';
   @Input() type : InputType = 'text';
   @Input() control : AbstractControl | null = new FormControl();
+  @Output() valueChange: EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
 
   ngOnInit() {}
 
-  public doWrite(event: any){
+  public onChange(event: any) {
     if (this.control) {
       this.control.setValue(event.target.value);
-      console.log(this.control.value);
+      this.valueChange.emit(this.control.value);
     }
   }
 
