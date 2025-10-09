@@ -54,6 +54,10 @@ export class Auth {
       console.error('Error logging out user:', error);
     }
   }
+
+  async getUid () {
+    return this.afb.currentUser ? this.afb.currentUser.uid : null;
+  } 
 }
 
 

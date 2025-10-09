@@ -8,6 +8,7 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { Query } from './services/query/query';
 import { File } from './providers/file/file';
 import { Capacitor } from '@capacitor/core';
+import { Uploader } from './providers/uploader/uploader';
 
 
 @NgModule({
@@ -19,7 +20,7 @@ import { Capacitor } from '@capacitor/core';
     provideFirebaseApp(() => initializeApp((environment.FIREBASE))),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
-    Auth, Query, File
+    Auth, Query, File, Uploader
   ]
 })
 export class CoreModule implements OnInit { 
@@ -33,4 +34,7 @@ export class CoreModule implements OnInit {
     console.log("requesting permissions");
     await this.fileSrv.requestPermissions();
   }
+
+
 }
+

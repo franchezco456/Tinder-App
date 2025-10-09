@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { File } from 'src/app/core/providers/file/file';
+import { Images } from 'src/app/shared/services/images/images';
 
 @Component({
   selector: 'app-register',
@@ -31,7 +31,7 @@ export class RegisterPage implements OnInit {
 
   // Opciones para el radio de género
 
-  constructor(private formBuilder: FormBuilder, private readonly fileSrv: File) {
+  constructor(private formBuilder: FormBuilder, private readonly imageSrv: Images) {
     this.initForm();
   }
   
@@ -155,7 +155,9 @@ export class RegisterPage implements OnInit {
   }
 
   public async selectImages() {
-    const images = await this.fileSrv.pickImage();
-    console.log(images.data);
+    const image = await this.imageSrv.uploadImage(this.registerForm.get('email')?.value);
+    this.registerForm.get('photos')?.setValue([...this.registerForm.get('photos')?.value, image]);
+    console.log('Selected image:', image);
+    console.log(this.registerForm);
   }
 }

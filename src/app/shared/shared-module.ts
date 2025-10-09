@@ -4,6 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { InputComponent } from './components/input/input.component';
 import { CardComponent } from './components/card/card.component';
 import { ButtonComponent } from './components/button/button.component';
+import { Images } from './services/images/images';
 
 @NgModule({
   declarations: [InputComponent, CardComponent, ButtonComponent],
