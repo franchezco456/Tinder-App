@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { Auth } from 'src/app/core/providers/auth/auth';
 import { Images } from 'src/app/shared/services/images/images';
+import { Credentials } from 'src/domain/model/credentials.model';
+import { User } from 'src/domain/model/user.model';
 
 @Component({
   selector: 'app-register',
@@ -10,43 +13,35 @@ import { Images } from 'src/app/shared/services/images/images';
 })
 export class RegisterPage implements OnInit {
   public page: number = 0;
-  public gender : string = '';
+  public gender: string = '';
   public registerForm !: FormGroup;
   public ageError: string = '';
+  public urls: string[] = [];
 
-  public passionsOps = [
-    { label: 'Sports', value: 'sports' },
-    { label: 'Music', value: 'music' },
-    { label: 'Travel', value: 'travel' },
-    { label: 'Reading', value: 'reading' },
-    { label: 'Movies', value: 'movies' },
-    { label: 'Cooking', value: 'cooking' },
-    { label: 'Movies', value: 'movies' },
-    { label: 'Yoga', value: 'yoga' },
-    { label: 'Video Games', value: 'video_games' },
-    { label: 'Books', value: 'books' },
-    { label: 'Lofi', value: 'lofi' },
-    { label: 'Gym', value: 'gym' }
-  ];
 
-  // Opciones para el radio de género
 
-  constructor(private formBuilder: FormBuilder, private readonly imageSrv: Images) {
+
+  constructor(private formBuilder: FormBuilder, private readonly imageSrv: Images, private readonly authSrv: Auth) {
     this.initForm();
   }
-  
+
   ngOnInit() {
-    // Marcar el campo birthdate como touched cuando cambie para mostrar errores inmediatamente
     this.registerForm.get('birthdate')?.valueChanges.subscribe(() => {
       this.registerForm.get('birthdate')?.markAsTouched();
     });
   }
 
-  changePage(next: boolean) {
+  async changePage(next: boolean) {
     if (next && this.isPageValid()) {
       this.page++;
     } else if (!next) {
       this.page--;
+    }
+    if (this.page == 4) {
+      await this.imageSrv.loadImagesFromUser(this.registerForm.get('email')?.value).then(urls => {
+        this.urls = urls;
+      });
+      this.registerForm.get('photos')?.setValue(this.urls);
     }
     console.log(this.registerForm.value);
   }
@@ -65,12 +60,10 @@ export class RegisterPage implements OnInit {
       });
     }
     if (this.page === 1) {
-      // Validar que se haya seleccionado un género
       const genderControl = this.registerForm.get('gender');
       return !!(genderControl && genderControl.valid && genderControl.value !== '');
     }
     if (this.page === 2) {
-      // Validar que la fecha de nacimiento sea válida y mayor de 18 años
       const birthdateControl = this.registerForm.get('birthdate');
       return !!(birthdateControl && birthdateControl.valid);
     }
@@ -88,10 +81,10 @@ export class RegisterPage implements OnInit {
     today.setDate(today.getDate() - 1);
     const age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    
 
-    const exactAge = monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate()) 
-      ? age - 1 
+
+    const exactAge = monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())
+      ? age - 1
       : age;
 
     if (exactAge < 18) {
@@ -144,8 +137,8 @@ export class RegisterPage implements OnInit {
         passionsControl.setValue([...currentValues, value]);
       }
       passionsControl.markAsTouched();
+    }
   }
-}
 
   public isPassionSelected(value: string): boolean {
     const passionsControl = this.registerForm.get('passion');
@@ -157,7 +150,43 @@ export class RegisterPage implements OnInit {
   public async selectImages() {
     const image = await this.imageSrv.uploadImage(this.registerForm.get('email')?.value);
     this.registerForm.get('photos')?.setValue([...this.registerForm.get('photos')?.value, image]);
+    this.urls.push(image);
     console.log('Selected image:', image);
     console.log(this.registerForm);
   }
+
+  private formToUser(form: FormGroup): User {
+    const raw = form.value;
+    return {
+      uid: "",
+      name: raw.firstName,
+      lastName: raw.lastName,
+      email: raw.email,
+      birthDate: raw.birthdate,
+      country: raw.country,
+      gender: raw.gender,
+      showGenderProfile: !!raw.showGenderProfile,
+      passions: (raw.passions || []).map((p: string) => ({ category: p })),
+      photos: raw.photos || []
+    };
+  }
+
+  private formToCredential(form: FormGroup): Credentials {
+    const raw = form.value;
+    return {
+      email: raw.email,
+      password: raw.password
+    };
+  }
+
+
+  public async onSubmit() {
+    console.log('Form submitted:', this.registerForm.value);
+    const user = this.formToUser(this.registerForm);
+    const credentials = this.formToCredential(this.registerForm);
+    const response = await this.authSrv.register(credentials, user);
+    console.log(response);
+  }
+
+
 }

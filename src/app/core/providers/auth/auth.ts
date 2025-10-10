@@ -3,30 +3,33 @@ import { Auth as AuthFire, createUserWithEmailAndPassword, signInWithEmailAndPas
 import { FormGroup } from '@angular/forms';
 import { Credentials } from 'src/domain/model/credentials.model';
 import { User } from 'src/domain/model/user.model';
+import { Query } from '../../services/query/query';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Auth {
 
-  constructor(private readonly afb: AuthFire) { }
+  constructor(private readonly afb: AuthFire, private readonly querySrv: Query) { }
 
-  async register(credentials : Credentials, user : User): Promise <string> {
+  async register(credentials: Credentials, user: User): Promise<string> {
     try {
       const response = await createUserWithEmailAndPassword(
         this.afb,
         credentials.email,
         credentials.password
       )
-      
-      return response.user.uid;
+      const uid = response.user.uid;
+      user.uid=uid;
+      await this.querySrv.create('users', user, uid);
+      return uid;
     } catch (error) {
       console.error((error as any).message);
       throw error;
     }
   }
 
-  async loginWithEmailAndPassword(credential: Credentials): Promise <string> {
+  async loginWithEmailAndPassword(credential: Credentials): Promise<string> {
     try {
       if (!credential.email) {
         throw new Error('Email is required');
@@ -48,16 +51,16 @@ export class Auth {
   }
 
   async logout() {
-    try{
+    try {
       await this.afb.signOut();
-    }catch(error){
+    } catch (error) {
       console.error('Error logging out user:', error);
     }
   }
 
-  async getUid () {
+  async getUid() {
     return this.afb.currentUser ? this.afb.currentUser.uid : null;
-  } 
+  }
 }
 
 

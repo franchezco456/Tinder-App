@@ -23,4 +23,12 @@ export class Images {
     return url;
   }
 
+  public async loadImagesFromUser(email: string) {
+    const urls = await this.uploaderSrv.loadAllImagesFromFolder(
+      'Tinder',
+      'images/' + email
+    );
+    return urls;
+  }
+
 }

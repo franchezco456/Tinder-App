@@ -15,6 +15,34 @@ export class Uploader {
   if (error) {
     console.log(error);
   }
-  return data?.path;
+  return await this.getSignUrl(bucket, data?.path || '');
+}
+
+async getSignUrl(bucket: string, name: string): Promise<string> {
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .createSignedUrl(name, 86400);
+    if (error) {
+      console.log(error);
+    }
+    return data?.signedUrl || '';
+  }
+
+  async loadAllImagesFromFolder(bucket: string, folder: string) {
+  const { data, error } = await supabase.storage.from(bucket).list(folder);
+  if (error) {
+    console.log(error);
+    return [];
+  }
+  const urls: string[] = [];
+  for (const file of data) {
+    const { data: signData, error: signError } = await supabase.storage
+      .from(bucket)
+      .createSignedUrl(`${folder}/${file.name}`, 86400);
+    if (!signError && signData?.signedUrl) {
+      urls.push(signData.signedUrl);
+    }
+  }
+  return urls;
 }
 }

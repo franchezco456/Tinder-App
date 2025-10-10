@@ -10,7 +10,7 @@ export class Query {
   
 constructor(private readonly FSsrv: Firestore) {}
 
-async create (collectionName: string, data: User, uuid: string){
+async create (collectionName: string, data: any, uuid: string){
   try{
     const collect = collection(this.FSsrv, collectionName);
     const docRef = doc(collect, uuid);

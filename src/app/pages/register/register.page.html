@@ -2,7 +2,7 @@
   <ion-grid>
     <ion-row>
       <ion-col>
-        <form [formGroup]="registerForm">
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
           <app-card>
             <ion-grid>
               @if(page==0){
@@ -61,6 +61,9 @@
               </ion-row>
               <ion-row>
                 <ion-col>
+                  <app-button label="Return" fill="solid" type="button" (click)="changePage(false)"></app-button>
+                </ion-col>
+                <ion-col>
                   <app-button label="Continue" fill="solid" type="button" (click)="changePage(true)"></app-button>
                 </ion-col>
               </ion-row>
@@ -83,6 +86,9 @@
               }
               <ion-row>
                 <ion-col>
+                  <app-button label="Return" fill="solid" type="button" (click)="changePage(false)"></app-button>
+                </ion-col>
+                <ion-col>
                   <app-button label="Continue" fill="solid" type="button" [disabled]="!isPageValid()"
                     (click)="changePage(true)"></app-button>
                 </ion-col>
@@ -90,40 +96,58 @@
               }
 
               @else if(page==3){
-                <ion-row>
-                  <ion-col>
-                    <app-button label = "Sports" [fill]="isPassionSelected('sports') ? 'solid' : 'outline'" [color]="isPassionSelected('sports') ? 'primary' : 'medium'" type="button" (click)="selectInterest('sports')"></app-button>
-                  </ion-col>
-                  <ion-col>
-                    <app-button label = "Music" [fill]="isPassionSelected('music') ? 'solid' : 'outline'" [color]="isPassionSelected('music') ? 'primary' : 'medium'" type="button" (click)="selectInterest('music')"></app-button>
-                  </ion-col>
-                  <ion-col>
-                    <app-button label = "Travel" [fill]="isPassionSelected('travel') ? 'solid' : 'outline'" [color]="isPassionSelected('travel') ? 'primary' : 'medium'" type="button" (click)="selectInterest('travel')"></app-button>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <app-button label = "Movies" [fill]="isPassionSelected('movies') ? 'solid' : 'outline'" [color]="isPassionSelected('movies') ? 'primary' : 'medium'" type="button" (click)="selectInterest('movies')"></app-button>
-                  </ion-col>
-                  <ion-col>
-                    <app-button label = "Books" [fill]="isPassionSelected('books') ? 'solid' : 'outline'" [color]="isPassionSelected('books') ? 'primary' : 'medium'" type="button" (click)="selectInterest('books')"></app-button>
-                  </ion-col>
-                  <ion-col>
-                    <app-button label = "Art" [fill]="isPassionSelected('art') ? 'solid' : 'outline'" [color]="isPassionSelected('art') ? 'primary' : 'medium'" type="button" (click)="selectInterest('art')"></app-button>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <app-button label = "Cooking" [fill]="isPassionSelected('cooking') ? 'solid' : 'outline'" [color]="isPassionSelected('cooking') ? 'primary' : 'medium'" type="button" (click)="selectInterest('cooking')"></app-button>
-                  </ion-col>
-                  <ion-col>
-                    <app-button label = "Video Games" [fill]="isPassionSelected('video_games') ? 'solid' : 'outline'" [color]="isPassionSelected('video_games') ? 'primary' : 'medium'" type="button" (click)="selectInterest('video_games')"></app-button>
-                  </ion-col>
-                  <ion-col>
-                    <app-button label = "Gym" [fill]="isPassionSelected('gym') ? 'solid' : 'outline'" [color]="isPassionSelected('gym') ? 'primary' : 'medium'" type="button" (click)="selectInterest('gym')"></app-button>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
+              <ion-row>
+                <ion-col>
+                  <app-button label="Sports" [fill]="isPassionSelected('sports') ? 'solid' : 'outline'"
+                    [color]="isPassionSelected('sports') ? 'primary' : 'medium'" type="button"
+                    (click)="selectInterest('sports')"></app-button>
+                </ion-col>
+                <ion-col>
+                  <app-button label="Music" [fill]="isPassionSelected('music') ? 'solid' : 'outline'"
+                    [color]="isPassionSelected('music') ? 'primary' : 'medium'" type="button"
+                    (click)="selectInterest('music')"></app-button>
+                </ion-col>
+                <ion-col>
+                  <app-button label="Travel" [fill]="isPassionSelected('travel') ? 'solid' : 'outline'"
+                    [color]="isPassionSelected('travel') ? 'primary' : 'medium'" type="button"
+                    (click)="selectInterest('travel')"></app-button>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <app-button label="Movies" [fill]="isPassionSelected('movies') ? 'solid' : 'outline'"
+                    [color]="isPassionSelected('movies') ? 'primary' : 'medium'" type="button"
+                    (click)="selectInterest('movies')"></app-button>
+                </ion-col>
+                <ion-col>
+                  <app-button label="Books" [fill]="isPassionSelected('books') ? 'solid' : 'outline'"
+                    [color]="isPassionSelected('books') ? 'primary' : 'medium'" type="button"
+                    (click)="selectInterest('books')"></app-button>
+                </ion-col>
+                <ion-col>
+                  <app-button label="Art" [fill]="isPassionSelected('art') ? 'solid' : 'outline'"
+                    [color]="isPassionSelected('art') ? 'primary' : 'medium'" type="button"
+                    (click)="selectInterest('art')"></app-button>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <app-button label="Cooking" [fill]="isPassionSelected('cooking') ? 'solid' : 'outline'"
+                    [color]="isPassionSelected('cooking') ? 'primary' : 'medium'" type="button"
+                    (click)="selectInterest('cooking')"></app-button>
+                </ion-col>
+                <ion-col>
+                  <app-button label="Video Games" [fill]="isPassionSelected('video_games') ? 'solid' : 'outline'"
+                    [color]="isPassionSelected('video_games') ? 'primary' : 'medium'" type="button"
+                    (click)="selectInterest('video_games')"></app-button>
+                </ion-col>
+                <ion-col>
+                  <app-button label="Gym" [fill]="isPassionSelected('gym') ? 'solid' : 'outline'"
+                    [color]="isPassionSelected('gym') ? 'primary' : 'medium'" type="button"
+                    (click)="selectInterest('gym')"></app-button>
+                </ion-col>
+              </ion-row>
+              <ion-row>
                 <ion-col>
                   <app-button label="Return" fill="solid" type="button" (click)="changePage(false)"></app-button>
                 </ion-col>
@@ -133,7 +157,24 @@
               </ion-row>
               }
               @else if(page==4){
-                <app-button label="Select Images" fill="solid" type="button" (click)="selectImages()"></app-button>
+              <app-button label="Select Images" fill="solid" type="button" (click)="selectImages()"></app-button>
+              <ng-container *ngIf="urls.length > 0">
+                <ion-grid>
+                  <ion-row *ngFor="let row of urls | slice:0:urls.length; let i = index">
+                    <ion-col size="6" *ngFor="let url of urls.slice(i*2, i*2+2)">
+                      <app-card [imgSrc]="url"></app-card>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ng-container>
+              <ion-row>
+                <ion-col>
+                  <app-button label="Return" fill="solid" type="button" (click)="changePage(false)"></app-button>
+                </ion-col>
+                <ion-col>
+                  <app-button label="Finish" fill="solid" type="submit" [disabled]="registerForm.invalid"></app-button>
+                </ion-col>
+              </ion-row>
               }
             </ion-grid>
           </app-card>
