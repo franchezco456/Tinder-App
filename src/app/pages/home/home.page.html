@@ -10,8 +10,8 @@
           </app-card>
 
           <div class="action-buttons" style="display:flex;gap:1rem;justify-content:center;margin-top:1rem">
-            <ion-button color="danger" (click)="reject()">Rechazar</ion-button>
-            <ion-button color="primary" (click)="accept()">❤️ Dar match</ion-button>
+            <app-button label="Rechazar" color="danger" (click)="reject()"></app-button>
+            <app-button label="❤️ Dar match" color="primary" (click)="accept()"></app-button>
           </div>
         </ng-container>
         <ng-template #noMore>
