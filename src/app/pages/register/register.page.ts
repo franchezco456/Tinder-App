@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/providers/auth/auth';
 import { Images } from 'src/app/shared/services/images/images';
 import { Credentials } from 'src/domain/model/credentials.model';
@@ -21,7 +22,7 @@ export class RegisterPage implements OnInit {
 
 
 
-  constructor(private formBuilder: FormBuilder, private readonly imageSrv: Images, private readonly authSrv: Auth) {
+  constructor(private formBuilder: FormBuilder, private readonly routerSrv : Router,private readonly imageSrv: Images, private readonly authSrv: Auth) {
     this.initForm();
   }
 
@@ -185,7 +186,10 @@ export class RegisterPage implements OnInit {
     const user = this.formToUser(this.registerForm);
     const credentials = this.formToCredential(this.registerForm);
     const response = await this.authSrv.register(credentials, user);
-    console.log(response);
+    if(response) {
+      console.log(response);
+      await this.routerSrv.navigate(['/login']);
+    }
   }
 
 

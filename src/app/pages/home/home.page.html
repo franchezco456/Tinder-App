@@ -1,20 +1,23 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-    Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" class="ion-text-center">
+        <ng-container *ngIf="currentUser; else noMore">
+          <app-card [imgSrc]="currentUser.photos?.[0]">
+            <h2>{{ currentUser.name }} {{ currentUser.lastName }}</h2>
+            <p>{{ currentUser.city }}, {{ currentUser.country }}</p>
+            <p>{{ currentUser.passionsString }}</p>
+          </app-card>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+          <div class="action-buttons" style="display:flex;gap:1rem;justify-content:center;margin-top:1rem">
+            <ion-button color="danger" (click)="reject()">Rechazar</ion-button>
+            <ion-button color="primary" (click)="accept()">❤️ Dar match</ion-button>
+          </div>
+        </ng-container>
+        <ng-template #noMore>
+          <p>No hay más usuarios por mostrar.</p>
+        </ng-template>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
